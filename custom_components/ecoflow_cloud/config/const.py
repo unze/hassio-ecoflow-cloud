@@ -26,6 +26,7 @@ class EcoflowModel(Enum):
     DELTA_2_MAX = 9,
     DELTA_MINI = 15,   # productType = 15
     POWERSTREAM = 51,
+    SMART_HOME_PANEL = 60,  # random
     DIAGNOSTIC = 99
 
     @classmethod

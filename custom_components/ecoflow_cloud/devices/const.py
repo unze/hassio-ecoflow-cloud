@@ -110,7 +110,6 @@ USB_3_OUT_POWER = "USB (3) Out Power"
 USB_QC_1_OUT_POWER = "USB QC (1) Out Power"
 USB_QC_2_OUT_POWER = "USB QC (2) Out Power"
 
-
 REMAINING_TIME = "Remaining Time"
 CHARGE_REMAINING_TIME = "Charge Remaining Time"
 DISCHARGE_REMAINING_TIME = "Discharge Remaining Time"
@@ -171,7 +170,6 @@ MAX_CELL_TEMP = "Max Cell Temperature"
 ATTR_MIN_CELL_TEMP = MIN_CELL_TEMP
 ATTR_MAX_CELL_TEMP = MAX_CELL_TEMP
 
-
 BATTERY_VOLT = "Battery Volts"
 MIN_CELL_VOLT = "Min Cell Volts"
 MAX_CELL_VOLT = "Max Cell Volts"
@@ -180,3 +178,11 @@ ATTR_MAX_CELL_VOLT = MAX_CELL_VOLT
 
 BATTERY_AMP = "Battery Current"
 SLAVE_BATTERY_AMP = "Slave Battery Current"
+
+SHP_CIRCUIT_N_MODE = "Circuit %i Mode"
+SHP_CIRCUIT_N_POWER = "Circuit %i Power"
+SHP_AC_N_OUT_POWER = "AC%i Out Power"
+SHP_AC_N_IN_POWER = "AC%i In Power"
+SHP_AC_N_BATTERY_LEVEL = "AC%i Battery Level"
+SHP_AC_N_CHARGE_TIME = "AC%i Charge Time"
+SHP_AC_N_DISCHARGE_TIME = "AC%i Discharge Time"
