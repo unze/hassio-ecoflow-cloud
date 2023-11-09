@@ -131,7 +131,7 @@ class BaseNumberEntity(NumberEntity, EcoFlowBaseCommandEntity):
     _attr_entity_category = EntityCategory.CONFIG
 
     def __init__(self, client: EcoflowMQTTClient, mqtt_key: str, title: str, min_value: int, max_value: int,
-                 command: Callable[[int], dict[str, any]] | None, enabled: bool = True,
+                 command: Callable[[int, Optional[dict[str, Any]]], dict[str, any]] | None, enabled: bool = True,
                  auto_enable: bool = False):
         super().__init__(client, mqtt_key, title, command, enabled, auto_enable)
         self._attr_native_max_value = max_value

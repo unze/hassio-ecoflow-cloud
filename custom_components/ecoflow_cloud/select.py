@@ -1,4 +1,4 @@
-from typing import Callable, Any
+from typing import Callable, Any, Optional
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -21,7 +21,8 @@ class DictSelectEntity(BaseSelectEntity):
     _attr_available = False
 
     def __init__(self, client: EcoflowMQTTClient, mqtt_key: str, title: str, options: dict[str, any],
-                 command: Callable[[any], dict[str, any]] | None, enabled: bool = True, auto_enable: bool = False):
+                 command: Callable[[any, Optional[dict[str, Any]]], dict[str, any]] | None, enabled: bool = True,
+                 auto_enable: bool = False):
         super().__init__(client, mqtt_key, title, command, enabled, auto_enable)
         self.__options_dict = options
         self._attr_options = list(options.keys())
