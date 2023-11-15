@@ -6,7 +6,7 @@ from ..entities import BaseSensorEntity, BaseNumberEntity, BaseSwitchEntity, Bas
 from ..number import MaxBatteryLevelEntity, MinBatteryLevelEntity
 from ..select import DictSelectEntity
 from ..sensor import OutWattsSensorEntity, InWattsSensorEntity, LevelSensorEntity, \
-    RemainSensorEntity, MiscBinarySensorEntity
+    RemainSensorEntity, MiscBinarySensorEntity, StatusSensorEntity
 from ..switch import EnabledEntity
 
 MODES = {
@@ -47,6 +47,7 @@ class SmartHomePanel(BaseDevice):
             MiscBinarySensorEntity(client, "energyInfos[1].stateBean.isConnect", const.SHP_AC_N_CONNECTED % 2),
             MiscBinarySensorEntity(client, "energyInfos[1].stateBean.isEnable", const.SHP_AC_N_ENABLED % 2),
 
+            StatusSensorEntity(client)
         ]
 
         return res
