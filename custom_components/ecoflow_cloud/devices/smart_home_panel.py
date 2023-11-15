@@ -10,21 +10,42 @@ from ..sensor import OutWattsSensorEntity, InWattsSensorEntity, LevelSensorEntit
 from ..switch import EnabledEntity
 
 MODES = {
-    "Auto": {"sta": 0, "ctrl_mode": 0},
-    "Grid": {"sta": 0, "ctrl_mode": 1},
-    "Battery": {"sta": 1, "ctrl_mode": 1},
-    "Off": {"sta": 2, "ctrl_mode": 1}
+    "Auto": {"sta": 0, "ctrlMode": 0},
+    "Grid": {"sta": 0, "ctrlMode": 1},
+    "Battery": {"sta": 1, "ctrlMode": 1},
+    "Off": {"sta": 2, "ctrlMode": 1}
 }
-
 
 class ModeDictSelectEntity(DictSelectEntity):
 
     def __init__(self, client: EcoflowMQTTClient, n: int):
         super().__init__(client, "loadCmdChCtrlInfos[%i]" % n, const.SHP_CIRCUIT_N_MODE % (n + 1), MODES,
-                         lambda value: {"sta": value.sta, "ctrlMode": value.ctrl_mode, "ch": 0, "cmdSet": 11, "id": 16})
+                         lambda value: {"moduleType": 0, "operateType": "TCP",
+                                        "params": {"sta": value['sta'], "ctrlMode": value['ctrlMode'], "ch": n,
+                                                   "cmdSet": 11, "id": 16}})
 
     def _update_value(self, val: Any) -> bool:
-        return super()._update_value({"sta": val.sta, "ctrl_mode": val.ctrlMode})
+        return super()._update_value({"sta": val['sta'], "ctrlMode": val['ctrlMode']})
+
+    def sample_value(self):
+        return {"sta": -66666, "ctrlMode": -66666}
+
+class GridChargeEnabledEntity(EnabledEntity):
+
+    def __init__(self, client: EcoflowMQTTClient, n: int):
+        super().__init__(client, "energyInfos[%i].stateBean.isGridCharge" % n, const.SHP_AC_N_CHARGING % (n + 1),
+                          lambda value: {"moduleType": 0, "operateType": "TCP",
+                                         "params": {"sta": value['sta'], "ctrlMode": value['ctrlMode'], "ch": 10 + n, "cmdSet": 11,
+                                                    "id": 17}})
+
+    def turn_on(self, **kwargs: Any) -> None:
+        self.send_set_message(1, self.command_dict({"sta": 2, "ctrlMode": 1}))
+
+    def turn_off(self, **kwargs: Any) -> None:
+        self.send_set_message(0, self.command_dict({"sta": 0, "ctrlMode": 0}))
+
+    def sample_value(self):
+        return {"sta": -66666, "ctrlMode": -66666}
 
 
 class SmartHomePanel(BaseDevice):
@@ -71,16 +92,8 @@ class SmartHomePanel(BaseDevice):
 
     def switches(self, client: EcoflowMQTTClient) -> list[BaseSwitchEntity]:
         return [
-            EnabledEntity(client, "energyInfos[0].stateBean.isGridCharge", const.SHP_AC_N_CHARGING % 1,
-                          lambda value: {"moduleType": 0, "operateType": "TCP",
-                                         "params": {"sta": value * 2, "ctrlMode": value, "ch": 10, "cmdSet": 11,
-                                                    "id": 17}}),
-
-            EnabledEntity(client, "energyInfos[1].stateBean.isGridCharge", const.SHP_AC_N_CHARGING % 1,
-                          lambda value: {"moduleType": 0, "operateType": "TCP",
-                                         "params": {"sta": value * 2, "ctrlMode": value, "ch": 10, "cmdSet": 11,
-                                                    "id": 17}})
-
+            GridChargeEnabledEntity(client, 0),
+            GridChargeEnabledEntity(client, 1)
         ]
 
     def selects(self, client: EcoflowMQTTClient) -> list[BaseSelectEntity]:
