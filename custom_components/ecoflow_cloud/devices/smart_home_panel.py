@@ -25,7 +25,7 @@ class ModeDictSelectEntity(DictSelectEntity):
                                                    "cmdSet": 11, "id": 16}})
 
     def _update_value(self, val: Any) -> bool:
-        return super()._update_value({"sta": val['sta'], "ctrlMode": val['ctrlMode']})
+        return super()._update_value({"sta": val['ctrlSta'], "ctrlMode": val['ctrlMode']})
 
     def sample_value(self):
         return {"sta": -66666, "ctrlMode": -66666}
